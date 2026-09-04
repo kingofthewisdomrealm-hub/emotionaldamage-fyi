@@ -1,0 +1,4 @@
+Run these from THIS folder only. Never from ~ or Desktop.
+
+npx vercel link --yes --scope josias7 --project emotionaldamage-fyi
+npx vercel --prod --yes
