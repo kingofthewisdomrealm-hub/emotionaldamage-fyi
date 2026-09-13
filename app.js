@@ -16,6 +16,12 @@ onScroll();
     bg.remove();
     return;
   }
+  try {
+    const url = new URL(bg.src);
+    url.searchParams.set("origin", location.origin);
+    url.searchParams.set("enablejsapi", "1");
+    bg.src = url.toString();
+  } catch (_) {}
   const tag = document.createElement("script");
   tag.src = "https://www.youtube.com/iframe_api";
   document.head.appendChild(tag);
@@ -27,6 +33,10 @@ onScroll();
           e.target.playVideo();
         },
         onStateChange(e) {
+          if (e.data === window.YT.PlayerState.PLAYING) {
+            const el = document.getElementById("hero-video");
+            if (el) el.classList.add("is-on");
+          }
           if (e.data === window.YT.PlayerState.ENDED) e.target.playVideo();
         },
       },
