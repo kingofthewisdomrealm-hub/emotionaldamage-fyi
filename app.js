@@ -1,6 +1,19 @@
 const year = document.getElementById("y");
 if (year) year.textContent = new Date().getFullYear();
 
+const nav = document.querySelector(".nav");
+function onScroll() {
+  if (!nav) return;
+  nav.classList.toggle("scrolled", window.scrollY > 24);
+}
+window.addEventListener("scroll", onScroll, { passive: true });
+onScroll();
+
+if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  const bg = document.getElementById("hero-video");
+  if (bg) bg.remove();
+}
+
 const modal = document.getElementById("direct");
 const form = document.getElementById("order-form");
 const openers = document.querySelectorAll("[data-open-direct]");
