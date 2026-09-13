@@ -9,10 +9,42 @@ function onScroll() {
 window.addEventListener("scroll", onScroll, { passive: true });
 onScroll();
 
-if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+(function heroVideo() {
   const bg = document.getElementById("hero-video");
-  if (bg) bg.remove();
-}
+  if (!bg) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    bg.remove();
+    return;
+  }
+  const tag = document.createElement("script");
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
+  window.onYouTubeIframeAPIReady = function () {
+    const player = new window.YT.Player("hero-video", {
+      events: {
+        onReady(e) {
+          e.target.mute();
+          e.target.playVideo();
+        },
+        onStateChange(e) {
+          if (e.data === window.YT.PlayerState.ENDED) e.target.playVideo();
+        },
+      },
+    });
+    function kick() {
+      try {
+        player.mute();
+        player.playVideo();
+      } catch (_) {}
+    }
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) kick();
+    });
+    ["click", "touchstart", "scroll"].forEach((ev) => {
+      document.addEventListener(ev, kick, { once: true, passive: true });
+    });
+  };
+})();
 
 const modal = document.getElementById("direct");
 const form = document.getElementById("order-form");
